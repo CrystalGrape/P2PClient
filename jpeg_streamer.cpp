@@ -98,6 +98,7 @@ int main()
 				sender.NewSender(image);
 				for(int i = 1; i < sender.GetInnerIndex(); i++){
 					SendImage(i, sender, listen, client_addr);
+					usleep(1000);
 				}
 			}
 			else{
