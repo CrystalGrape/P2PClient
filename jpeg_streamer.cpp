@@ -96,10 +96,12 @@ int main()
 				image_buffer.pop_front();
 				pthread_mutex_unlock(&buffer_lock);
 				sender.NewSender(image);
+				SendImage(0, sender, listen, client_addr);
+				/*
 				for(int i = 1; i < sender.GetInnerIndex(); i++){
 					SendImage(i, sender, listen, client_addr);
 					usleep(1000);
-				}
+				}*/
 			}
 			else{
 				//存在丢包，重发
