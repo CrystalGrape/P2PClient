@@ -20,7 +20,7 @@ using namespace Json;
 #define P2P_ERR_TIMEOUT		0x6001	//超时 
 #define P2P_ERR_PKGWRONG	0x6002	//数据包解析错误
 
-#define MAX_BURST_SIZE			(1024)
+#define MAX_BURST_SIZE			(1024*8)
 
 //发送器 
 class Sender
@@ -96,11 +96,13 @@ int main()
 				image_buffer.pop_front();
 				pthread_mutex_unlock(&buffer_lock);
 				sender.NewSender(image);
-				//SendImage(1, sender, listen, client_addr);
+				SendImage(1, sender, listen, client_addr);
+				/*
 				for(int i = 1; i < sender.GetInnerIndex(); i++){
 					SendImage(i, sender, listen, client_addr);
 					usleep(1000);
 				}
+				*/
 			}
 			else{
 				//存在丢包，重发
