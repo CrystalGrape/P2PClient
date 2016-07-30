@@ -100,7 +100,8 @@ int main()
 				for(int i = 1; i < sender.GetInnerIndex(); i++){
 					SendImage(i, sender, listen, client_addr);
 					usleep(1000);
-				}*
+				}
+			}
 			else{
 				//存在丢包，重发
 				Value array = root["playload"]["miss"];
