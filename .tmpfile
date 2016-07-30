@@ -1,0 +1,146 @@
+/*
+void split(char **arr, char *str, const char *del) {
+    char *s = strtok(str, del);
+    while (s != NULL) {
+        *arr++ = s;
+        s = strtok(NULL, del);
+    }
+}*/
+int file_exists(char *filename) {
+    return (access(filename, 0) == 0);
+}
+/*
+void replaceFirst(char *str1, char *str2, char *str3) {
+    char str4[strlen(str1) + 1];
+    char *p;
+    strcpy(str4, str1);
+    if ((p = strstr(str1, str2)) != NULL){
+        while (str1 != p && str1 != NULL){
+            str1++;
+        }
+        str1[0] = '\0';
+        strcat(str1, str3); 
+        strcat(str1, strstr(str4, str2) + strlen(str2));
+    }
+}
+
+void replace(char *str1, char *str2, char *str3) {
+    while (strstr(str1, str2) != NULL) {
+        replaceFirst(str1, str2, str3);
+    }
+}*/
+/*
+void substring(char *dest, char *src, int start, int end) {
+    char *p = src;
+    int i = start;
+    if (start > strlen(src))return;
+    if (end > strlen(src))
+        end = strlen(src);
+    while (i < end) {
+        dest[i - start] = src[i];
+        i++;
+    }
+    dest[i - start] = '\0';
+    return;
+}*/
+
+/*
+char charAt(char *src, int index) {
+    char *p = src;
+    int i = 0;
+    if (index < 0 || index > strlen(src))
+        return 0;
+    while (i < index)i++;
+    return p[i];
+}*/
+/*
+int lastIndexOf(char *str1, char *str2) {
+    char *p = str1;
+    int i = 0, len = strlen(str2);
+    p = strstr(str1, str2);
+    if (p == NULL)return -1;
+    while (p != NULL) {
+        for (; str1 != p; str1++)i++;
+        p = p + len;
+        p = strstr(p, str2);
+    }
+    return i;
+}*/
+/*
+void ltrim(char *str) {
+    int i = 0, j, len = strlen(str);
+    while (str[i] != '\0') {
+        if (str[i] != 32 && str[i] != 9)break;
+        i++;
+    }
+    if (i != 0)
+        for (j = 0; j <= len - i; j++) {
+            str[j] = str[j + i];
+        }
+}
+
+void rtrim(char *str) {
+    char *p = str;
+    int i = strlen(str) - 1;
+    while (i >= 0) {
+        if (p[i] != 32 && p[i] != 9)break;
+        i--;
+    }
+    str[++i] = '\0';
+}
+
+void trim(char *str) {
+    ltrim(str);
+    rtrim(str);
+}*/
+int GetCharset(char *src_html, char *charCode) {
+    char tmp_html[HTML_BUFFER_SIZE]={0};
+    int pos = indexOf(src_html, "text/html; charset=");
+    if (pos > 0) {
+        strncpy(tmp_html, src_html + pos + strlen("text/html; charset="), strlen(src_html) - pos);
+        pos = indexOf(tmp_html, "\"");
+        if (pos > 0) {
+            strncpy(charCode, tmp_html, pos);
+        }
+    }
+    return 0;
+
+}
+void http_post(char* url,char* data) {
+    CURL *curl;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url);
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+    }
+}
+/*
+int indexOf(const char *str1,const char *str2) {
+    char *p = str1;
+    int i = 0;
+    p = strstr(str1, str2);
+    if (p == NULL)
+        return -1;
+    else {
+        while (str1 != p) {
+            str1++;
+            i++;
+        }
+    }
+    return i;
+}
+*/
+FILE *fp = NULL;
+    if (access((char*) stream, 0) == -1) {
+        fp = fopen((char*) stream, "wb");
+    } else {
+        fp = fopen((char*) stream, "ab");
+    }
+    if (fp) {
+        fwrite(ptr, size, nmemb, fp);
+    }
+    fclose(fp);
