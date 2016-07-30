@@ -20,7 +20,7 @@ using namespace Json;
 #define P2P_ERR_TIMEOUT		0x6001	//超时 
 #define P2P_ERR_PKGWRONG	0x6002	//数据包解析错误
 
-#define MAX_BURST_SIZE			(1024*8)
+#define MAX_BURST_SIZE			(1024)
 
 //发送器 
 class Sender
