@@ -48,11 +48,7 @@ int Sender::Send(int innerIndex, string &out)
 	if(innerIndex > MaxInnerIndex)
 		return 1;
 	//如果是最后一个数据包
-	if(innerIndex == MaxInnerIndex){
-		out = base64_code.substr((innerIndex-1)*MAX_BURST_SIZE, base64_code.length());
-	}else{
-		out = base64_code.substr((innerIndex-1)*MAX_BURST_SIZE, innerIndex*MAX_BURST_SIZE);
-	}
+	out = base64_code.substr((innerIndex-1)*MAX_BURST_SIZE, MAX_BURST_SIZE);
 	return 0;
 }
 
@@ -96,13 +92,10 @@ int main()
 				image_buffer.pop_front();
 				pthread_mutex_unlock(&buffer_lock);
 				sender.NewSender(image);
-				SendImage(1, sender, listen, client_addr);
-				/*
 				for(int i = 1; i < sender.GetInnerIndex(); i++){
 					SendImage(i, sender, listen, client_addr);
 					usleep(1000);
 				}
-				*/
 			}
 			else{
 				//存在丢包，重发
@@ -123,6 +116,7 @@ void SendImage(int innerIndex, Sender sender, int socket, struct sockaddr_in des
 	Value head;
 	Value playload;
 	string content;
+	printf("orlsize:%d\n",content.size());
 	
 	head["pkgtype"] = P2P_STREAM;
 	head["srcid"] = "12345";
@@ -135,12 +129,13 @@ void SendImage(int innerIndex, Sender sender, int socket, struct sockaddr_in des
 	if(sender.Send(innerIndex, content) > 0)
 		return;
 	playload["content"] = content;
+	printf("content:%d\n",content.size());
 	Value pkg;
 	pkg["head"] = head;
 	pkg["playload"] = playload;
 	string json_str=writer.write(pkg);
 	
-	printf("size:%d\ndata:%s\n",json_str.size(), json_str.c_str());
+	printf("size:%d\n\n",json_str.size());
 	sendto(socket, json_str.c_str(), json_str.size(), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
 }
 
