@@ -139,6 +139,7 @@ void SendImage(int innerIndex, Sender sender, int socket, struct sockaddr_in des
 	pkg["playload"] = playload;
 	string json_str=writer.write(pkg);
 	
+	printf("size:%d\ndata:%s\n",json_str.size(), json_str.c_str());
 	sendto(socket, json_str.c_str(), json_str.size(), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
 }
 
