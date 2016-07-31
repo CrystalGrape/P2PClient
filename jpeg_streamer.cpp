@@ -94,7 +94,6 @@ int main()
 				sender.NewSender(image);
 				for(int i = 1; i <= sender.GetInnerIndex(); i++){
 					SendImage(i, sender, listen, client_addr);
-					//sleep(1);
 				}
 			}
 			else{
@@ -116,7 +115,6 @@ void SendImage(int innerIndex, Sender sender, int socket, struct sockaddr_in des
 	Value head;
 	Value playload;
 	string content;
-	printf("orlsize:%d\n",content.size());
 	
 	head["pkgtype"] = P2P_STREAM;
 	head["srcid"] = "12345";
@@ -129,13 +127,11 @@ void SendImage(int innerIndex, Sender sender, int socket, struct sockaddr_in des
 	if(sender.Send(innerIndex, content) > 0)
 		return;
 	playload["content"] = content;
-	printf("content:%d\n",content.size());
 	Value pkg;
 	pkg["head"] = head;
 	pkg["playload"] = playload;
 	string json_str=writer.write(pkg);
 	
-	printf("size:%d\n\n",json_str.size());
 	sendto(socket, json_str.c_str(), json_str.size(), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
 }
 
@@ -150,6 +146,7 @@ void TimerOut(int signo)
 	new_value.it_value.tv_usec = 100000;
 	setitimer(ITIMER_REAL, &new_value, &old_value);
 }
+
 void SetJpegStreamer()
 {
 	signal(SIGALRM, TimerOut);
