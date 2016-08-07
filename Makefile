@@ -1,4 +1,4 @@
-CC=arm-linux-g++
+CC=g++
 INC=-I/opt/curl/include -I/opt/json/include
 LIB=-L/opt/curl/lib -L/opt/json/lib 
 all:base64.o http_get.o jpeg_streamer.o

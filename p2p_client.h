@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
+#define ServerIp "119.29.5.83"
 class P2PClient
 {
 public:
@@ -20,7 +21,7 @@ public:
 		struct sockaddr_in server_addr;
 		bzero(&server_addr, sizeof(server_addr));
 		server_addr.sin_family = AF_INET;
-		server_addr.sin_addr.s_addr = inet_addr("192.168.1.2");
+		server_addr.sin_addr.s_addr = inet_addr(ServerIp);
 		server_addr.sin_port = htons(8000);
 		sendto(s, login, strlen(login),0,(struct sockaddr*)&server_addr,sizeof(server_addr));
 	}
@@ -31,7 +32,7 @@ public:
 		struct sockaddr_in server_addr;
 		bzero(&server_addr, sizeof(server_addr));
 		server_addr.sin_family = AF_INET;
-		server_addr.sin_addr.s_addr = inet_addr("192.168.1.2");
+		server_addr.sin_addr.s_addr = inet_addr(ServerIp);
 		server_addr.sin_port = htons(8000);
 		sendto(s, login, strlen(login),0,(struct sockaddr*)&server_addr,sizeof(server_addr));
 	}
