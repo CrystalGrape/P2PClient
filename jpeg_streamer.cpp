@@ -8,7 +8,7 @@
 
 #include "http_get.h"
 #include "base64.h"
-
+#include "p2p_client.h"
 using namespace Json;
 //数据包类型
 #define P2P_HEART		0x7001	//心跳包
@@ -72,6 +72,8 @@ int main()
 		return -1;
 	if(bind(listen, (struct sockaddr *)&listen_addr,sizeof(listen_addr)) < 0)
 		return -1;
+	P2PClient *clt = P2PClient::GetInstance("0000001", listen);
+	clt->Login();
 	pthread_mutex_init(&buffer_lock,NULL);
 	SetJpegStreamer();
 	while(1){
@@ -80,12 +82,13 @@ int main()
 			continue;
 		}
 		buffer[len] = '\0';
+		cout<<buffer<<endl;
 		Reader reader;
 		Value root;
 		if(!reader.parse(buffer,root))
 			continue;
-		if(root["head"]["pkgtype"] == P2P_RST){
-			if(root["head"]["index"] == 1){
+		if(root["head"]["pkgtype"].asInt() == P2P_RST&&strcmp(root["head"]["srcid"].asCString(),"000000")!=0){
+			if(root["head"]["index"].asInt() == 1){
 				//图片发送成功，发送下一张图片
 				pthread_mutex_lock(&buffer_lock);
 				struct image_buffer_t image = image_buffer.front();
@@ -117,7 +120,7 @@ void SendImage(int innerIndex, Sender sender, int socket, struct sockaddr_in des
 	string content;
 	
 	head["pkgtype"] = P2P_STREAM;
-	head["srcid"] = "12345";
+	head["srcid"] = "0000001";
 	head["index"] = (sender.GetInnerIndex() == innerIndex)?1:0;
 	head["sendtime"] = 0;
 	
@@ -132,11 +135,18 @@ void SendImage(int innerIndex, Sender sender, int socket, struct sockaddr_in des
 	pkg["playload"] = playload;
 	string json_str=writer.write(pkg);
 	
-	sendto(socket, json_str.c_str(), json_str.size(), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
+	
+	sendto(socket, json_str.c_str(), json_str.size()-1, 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
 }
 
 void TimerOut(int signo)
 {
+	static int count = 0;
+	if(++count == 40){
+		P2PClient *clt = P2PClient::GetInstance("0000001", 0);
+		clt->Heart();
+		count = 0;
+	}
 	start_http_streamer(image_buffer);
 	signal(SIGALRM, TimerOut);
 	struct itimerval new_value,old_value;

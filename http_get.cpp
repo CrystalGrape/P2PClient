@@ -28,7 +28,8 @@ void start_http_streamer(ImageList &imglist)
 	struct image_buffer_t image;
 	//http_get("http://127.0.0.1:8080/?action=stream", &image);
 	memset(&image, 0, sizeof(image));
-	http_get("http://img04.tooopen.com/images/20131017/sy_42766784359.jpg", &image);
+	http_get("http://127.0.0.1:8080/?action=snapshot", &image);
+	//http_get("http://img04.tooopen.com/images/20131017/sy_42766784359.jpg", &image);
 	SmartLock lock(&buffer_lock);
 	if(imglist.size() >= 20){
 		imglist.pop_front();
